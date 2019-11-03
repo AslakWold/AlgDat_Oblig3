@@ -361,9 +361,29 @@ public class ObligSBinTre<T> implements Beholder<T>
         throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
+    private void bladnodeVerdierRekurson(Node<T> p, StringBuilder str){
+        if(p == null) return;
+
+        bladnodeVerdierRekurson(p.venstre, str);
+        if(p.venstre == null && p.høyre == null){
+            str.append(p.verdi + ", ");
+        }
+        bladnodeVerdierRekurson(p.høyre, str);
+    }
+
     public String bladnodeverdier()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(tom()) return "[]";
+
+        StringBuilder utString = new StringBuilder("[");
+        Node<T> p = rot;
+
+        bladnodeVerdierRekurson(p, utString);
+        //Formaterer strengen
+        utString.delete(utString.length()-2, utString.length());
+        utString.append("]");
+
+        return utString.toString();
     }
 
     public String postString()

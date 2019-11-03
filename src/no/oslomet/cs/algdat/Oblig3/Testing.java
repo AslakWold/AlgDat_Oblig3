@@ -36,5 +36,15 @@ public class Testing {
 
         }
 
+        //Tester oopgave 8
+        {
+            String[] strenger = {"I","A","T","B","H","J","C","R","S","O","F","E","L","K","G","D","M","P","Q","N"};
+            ObligSBinTre<String> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+            for (String verdi: strenger) {
+                tre.leggInn(verdi);
+            }
+            System.out.println(tre.bladnodeverdier());
+        }
+
     }
 }
