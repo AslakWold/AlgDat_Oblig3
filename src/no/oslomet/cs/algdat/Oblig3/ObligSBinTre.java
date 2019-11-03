@@ -388,7 +388,44 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public String postString()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(tom()) return "[]";
+
+        //Bruker her to stacks, der den ene holder på verdiene til
+        //treet i motsatt postorden, deretter legges dette riktig
+        //igjen i motsatt rekkefølge inn i den andre stacken,
+
+        StringBuilder str = new StringBuilder("[");
+        Stack<Node<T>> stack_one = new Stack<>();
+        Stack<Node<T>> stack_two = new Stack<>();
+        Node<T> p = rot;
+
+        stack_one.push(p);
+        while(!stack_one.isEmpty()){
+            //Pop fra stack_one og push til stack_two
+            Node<T> temp = stack_one.pop();
+            stack_two.push(temp);
+
+            //Push venstre og høyre barn til
+            //tempnoden til stakk 1
+            if(temp.venstre != null){
+                stack_one.push(temp.venstre);
+            }
+            if(temp.høyre != null){
+                stack_one.push(temp.høyre);
+            }
+        }
+
+        while(!stack_two.isEmpty()){
+            Node<T> temp = stack_two.pop();
+            str.append(temp.verdi + ", ");
+        }
+
+
+        //Formater str
+        str.delete(str.length()-2, str.length());
+        str.append("]");
+        return str.toString();
+
     }
 
     @Override
