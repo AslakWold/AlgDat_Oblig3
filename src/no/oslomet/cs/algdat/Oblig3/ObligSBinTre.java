@@ -297,7 +297,53 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public String omvendtString()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        if(tom()) return "[]";
+
+        StringBuilder utString = new StringBuilder("[");
+        Stack<Node<T>> stack = new Stack<>();
+        //Lager en deque som holder på verdiene som skal skrives ut
+        ArrayDeque<Node<T>> finalStack = new ArrayDeque<>();
+        Node<T> p = rot;
+
+        //Starter i roten og går nedover mot venstre i treet
+        for( ; p.venstre != null; p = p.venstre){
+            //Legger til alle nodene som paseres i en stack
+            stack.push(p);
+        }
+
+        while(true){
+            //Legger til noden i hjelpestacken
+            finalStack.addFirst(p);
+
+            // Hvis noden har et høyre barn
+            if(p.høyre != null){
+                //Går nedover mot venstre i treet
+                for( p = p.høyre; p.venstre != null; p = p.venstre){
+                    //Alle noder som paseres legges i en stack
+                    stack.push(p);
+                }
+            }
+            else if(!stack.isEmpty()){
+                //Plukker ut nodene som ligger i stacken
+                p = stack.pop();
+            }
+            else {
+                break;
+            }
+        }
+
+        //Tar ut fra slutten av finalStack og legger til i utString
+        while(!finalStack.isEmpty()){
+            utString.append(finalStack.pop());
+            if(finalStack.peek() == null){
+                utString.append("]");
+            }
+            else utString.append(", ");
+        }
+
+        return utString.toString();
+
     }
 
     public String høyreGren()

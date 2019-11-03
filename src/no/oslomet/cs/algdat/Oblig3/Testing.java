@@ -20,5 +20,21 @@ public class Testing {
             System.out.println();
         }
 
+
+
+
+        //Tester oppg 4
+
+        {
+            String[] strenger = {"H", "Q", "B", "A", "C", "P", "U"};
+            ObligSBinTre<String> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+            for (String verdi: strenger) {
+                tre.leggInn(verdi);
+            }
+
+            System.out.println(tre.omvendtString());
+
+        }
+
     }
 }
