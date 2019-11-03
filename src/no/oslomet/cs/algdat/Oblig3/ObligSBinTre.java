@@ -93,7 +93,90 @@ public class ObligSBinTre<T> implements Beholder<T>
     @Override
     public boolean fjern(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+            if (verdi == null) return false;  // treet har ingen nullverdier
+
+            Node<T> p = rot, q = null;   // q skal være forelder til p
+
+            int wichChild = 0;
+
+
+            while (p != null)            // leter etter verdi
+            {
+                int cmp = comp.compare(verdi,p.verdi);      // sammenligner
+                if (cmp < 0) { q = p; p = p.venstre; wichChild = -1; }      // går til venstre
+                else if (cmp > 0) { q = p; p = p.høyre; wichChild = 1; }   // går til høyre
+                else break;    // den søkte verdien ligger i p
+            }
+            if (p == null) return false;   // finner ikke verdi
+            if(antall==1){
+                rot=null;
+            }
+            else if(p.venstre==null && p.høyre==null){
+                if(wichChild==-1){
+                    q.venstre=null;
+                }else{
+                    q.høyre=null;
+                }
+            }
+            else if(p.venstre==null){
+                p.høyre.forelder=q;
+                q.høyre=p.høyre.forelder;
+            }
+            else if(p.høyre==null){
+                p.venstre.forelder=q;
+                q.venstre=p.venstre.forelder;
+
+            }else {
+                Node<T> s = p, r = p.høyre;   // finner neste i inorden
+                while (r.venstre != null) {
+                    s = r;// s er forelder til r
+                    r = r.venstre;
+                    p.verdi = s.verdi;
+                    p.venstre.verdi = r.verdi;
+
+                }
+                s.forelder.venstre=null;
+                s.forelder=null;
+            }
+
+               // p.verdi = r.verdi;   // kopierer verdien i r til p
+
+
+
+                /*if(s!=p){
+                    s.venstre=r.høyre;
+                }else{
+                    s.høyre=r.høyre;
+                }/*
+
+            }
+
+            /*Node<T> pParent = p.forelder;
+
+            if (p.venstre == null || p.høyre == null)  // Tilfelle 1) og 2)
+            {
+                Node<T> b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
+                if (p == rot) rot = b;
+                else if (p == q.venstre) q.venstre = b;
+                else q.høyre = b;
+            }
+            else  // Tilfelle 3)
+            {
+                Node<T> s = p, r = p.høyre;   // finner neste i inorden
+                while (r.venstre != null)
+                {
+                    s = r;    // s er forelder til r
+                    r = r.venstre;
+                }
+
+                p.verdi = r.verdi;   // kopierer verdien i r til p
+
+                if (s != p) s.venstre = r.høyre;
+                else s.høyre = r.høyre;
+            }*/
+
+            antall--;   // det er nå én node mindre i treet
+            return true;
     }
 
     public int fjernAlle(T verdi)
