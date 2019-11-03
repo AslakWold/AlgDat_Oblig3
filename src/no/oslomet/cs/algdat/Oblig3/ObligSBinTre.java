@@ -274,6 +274,15 @@ public class ObligSBinTre<T> implements Beholder<T>
         }*/
     }
 
+    /*
+    public static void nesteInordenTest() {
+        int[] a = {4,7,2,9,4,10,8,7,4,6,1};
+        ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+        for(int verdi : a) {
+            tre.leggInn(verdi);
+        }
+        System.out.println(nesteInorden(tre.rot.høyre.venstre.høyre));
+    } */
     private static <T> Node<T> nesteInorden(Node<T> p)
     {
         if(p.høyre != null) {
@@ -281,7 +290,8 @@ public class ObligSBinTre<T> implements Beholder<T>
                 p = p.venstre;
             }
             return p;
-        } else {
+        }
+        else {
             while(p.forelder != null && p.forelder.høyre == p) {
                 p = p.forelder;
             }
@@ -292,7 +302,24 @@ public class ObligSBinTre<T> implements Beholder<T>
     @Override
     public String toString()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        StringJoiner sj = new StringJoiner(", ","[", "]");
+        Node<T> p = rot;
+
+        p = nesteInorden(p);
+
+
+        while(p != null) {
+            sj.add(String.valueOf(p.verdi));
+            p = nesteInorden(p);
+        }
+
+        while(p.venstre != null) {
+            sj.add(String.valueOf(p.verdi));
+            p = nesteInorden(p);
+
+        }
+
+        return sj.toString();
     }
 
     public String omvendtString()
