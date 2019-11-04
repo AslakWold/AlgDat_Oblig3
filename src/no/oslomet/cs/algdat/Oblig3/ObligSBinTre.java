@@ -266,25 +266,20 @@ public class ObligSBinTre<T> implements Beholder<T>
         fjernTre(rot);
     }
 
-    /*
-    public static void nesteInordenTest() {
-        int[] a = {4,7,2,9,4,10,8,7,4,6,1};
-        ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
-        for(int verdi : a) {
-            tre.leggInn(verdi);
+
+    private static <T> Node<T> førsteInorden(Node<T> p) {
+        while(p.venstre != null) {
+            p = p.venstre;
         }
-        System.out.println(nesteInorden(tre.rot.høyre.venstre.høyre));
-    } */
-    private static <T> Node<T> nesteInorden(Node<T> p)
-    {       //Må håndtere når man har flere høyre barn på rad...
-        if(p.høyre != null) {
-            while(p.venstre != null) {
-                p = p.venstre;
-            }
-            return p;
+        return p;
+    }
+
+    private static <T> Node<T> nesteInorden(Node<T> p) {
+        if (p.høyre != null) {
+            return førsteInorden(p.høyre);
         }
         else {
-            while(p.forelder != null && p.forelder.høyre == p) {
+            while (p.forelder != null && p.forelder.høyre == p) {
                 p = p.forelder;
             }
             return p.forelder;
@@ -294,21 +289,15 @@ public class ObligSBinTre<T> implements Beholder<T>
     @Override
     public String toString()
     {
+        if(tom()) {
+            return "[]";
+        }
         StringJoiner sj = new StringJoiner(", ","[", "]");
-        Node<T> p = rot;
-
-        p = nesteInorden(p);
-
+        Node<T> p = førsteInorden(rot);
 
         while(p != null) {
             sj.add(String.valueOf(p.verdi));
             p = nesteInorden(p);
-        }
-
-        while(p.venstre != null) {
-            sj.add(String.valueOf(p.verdi));
-            p = nesteInorden(p);
-
         }
 
         return sj.toString();
