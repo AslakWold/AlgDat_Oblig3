@@ -171,6 +171,7 @@ public class ObligSBinTre<T> implements Beholder<T>
                 p=null;
             }
         }
+        //Noden som skal sletter er roten med kun ett barn
         else if(p==rot){
             if(p.venstre!=null){
                 p.venstre.forelder=null;
@@ -180,7 +181,7 @@ public class ObligSBinTre<T> implements Beholder<T>
                 rot=p.høyre;
             }
         }
-        //Noden som skal slettes har et barn
+        //Noden som skal slettes har kun ett barn
         else{
             if(p.forelder.høyre!=null){
                 if(p.forelder.høyre.equals(p)){
@@ -489,45 +490,59 @@ public class ObligSBinTre<T> implements Beholder<T>
         printGren(p.venstre,grenVerdier,gren);
         //Sjekker om det er en bladnode
         if(p.venstre==null && p.høyre==null){
-            String ut = "[";
+            String stringUt = "[";
             for(int i = 0; i <= grenVerdier.antall()-1;i++){
-                ut += grenVerdier.hent(i);
+                stringUt += grenVerdier.hent(i);
                 if(i!=grenVerdier.antall()-1){
-                    ut+=", ";
+                    stringUt+=", ";
                 }
             }
-            ut+="]";
+            stringUt+="]";
+            /*StringBuilder stringUt = new StringBuilder("[");
+            for(int i = 0; i <= grenVerdier.antall()-1;i++){
+                stringUt.append(grenVerdier.hent(i));
+                if(i==grenVerdier.antall()-1){
+                    stringUt.append("]");
+                }else{
+                    stringUt.append(", ");
+                }*/
+
+
 
             //Legger grenen inn i egen tabellListe
-            gren.leggInn(ut);
+            gren.leggInn(stringUt);
 
-        }
+            }
+
         printGren(p.høyre,grenVerdier,gren);
         //Fjerner siste objekt for å finne ny gren.
         grenVerdier.fjern(grenVerdier.antall()-1);
-
 
     }
 
 
 
+
     public String[] grener()
     {
+        if(antall==0){
+            return new String[0];
+        }
 
         //Lager utArray og hjelpetabeller
-        String[] grenerUt = new String[antall/2 +1];
         TabellListe grener = new TabellListe();
         TabellListe grenTabbel = new TabellListe();
 
 
-        //Kjører hjelpemetode for å kunne bruke rekusjon.
+        //Kjører hjelpemetode for og kunne bruke rekusjon.
         printGren(rot,grenTabbel,grener);
+
+        String[] grenerUt = new String[grener.antall()];
 
         //Legger inn grenene i utArray fra Tabeller som var med i rekusjon.
         for(int i = 0; i<=grener.antall()-1;i++){
             grenerUt[i]=(String)grener.hent(i);
         }
-
 
         return grenerUt;
     }
