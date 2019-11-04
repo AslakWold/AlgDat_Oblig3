@@ -135,10 +135,11 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         //fjernVerdi(p,q);
 
-        fjernVerdiTest(p);
+        fjernVerdi(p);
 
+        antall--;
 
-            return true;
+        return true;
     }
 
     public static Node finnMinste(Node p){
@@ -148,17 +149,14 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         return finnMinste(p.venstre);
     }
-    private Node fjernVerdiTest(Node p){
+    private Node fjernVerdi(Node p){
 
         //Noden som slettes har to barns
         if(p.venstre!=null && p.høyre!=null){
             Node minste = finnMinste(p.høyre);
-            if (p.verdi.equals(minste.verdi)) {
-                fjernVerdiTest(minste);
-            }else{
             p.verdi = minste.verdi;
-            p.høyre = fjernVerdiTest(p.høyre);
-            }
+            fjernVerdi(minste);
+
         }
         //Noden som skal slettes har ingen barn
         else if(p.høyre==null && p.venstre==null){
@@ -173,27 +171,65 @@ public class ObligSBinTre<T> implements Beholder<T>
                 p=null;
             }
         }
+        else if(p==rot){
+            if(p.venstre!=null){
+                p.venstre.forelder=null;
+                rot=p.venstre;
+            }else{
+                p.høyre.forelder=null;
+                rot=p.høyre;
+            }
+        }
         //Noden som skal slettes har et barn
         else{
-          if(p.venstre!=null){
-              p.forelder.venstre=p.venstre;
-              p.venstre.forelder=p.forelder;
-          }
-          else{
-              p.forelder.høyre=p.høyre;
-              p.høyre.forelder=p.forelder;
-          }
+            if(p.forelder.høyre!=null){
+                if(p.forelder.høyre.equals(p)){
+                    if(p.venstre!=null){
+                        if(p.equals(rot)){
+                            rot = p.venstre;
+                        }else{
+                            p.forelder.høyre = p.venstre;
+                        }
+                        p.venstre.forelder = p.forelder;
+                    }
+                    else{
+                        if(p.equals(rot)){
+                            rot = p.høyre;
+                        }else{
+                            p.forelder.høyre = p.høyre;
+                        }
+                        p.høyre.forelder = p.forelder;
+                    }
+            }
+            }if(p.forelder.venstre!=null){
+                if(p.forelder.venstre.equals(p)){
+                    if(p.venstre!=null){
+                        if(p.equals(rot)){
+                            rot = p.venstre;
+                        }else{
+                            p.forelder.venstre = p.venstre;
+                        }
+                        p.venstre.forelder = p.forelder;
+                    }
+                    else{
+                        if(p.equals(rot)){
+                            rot = p.høyre;
+                        }else{
+                            p.forelder.venstre = p.høyre;
+                        }
+                        p.høyre.forelder = p.forelder;
+                    }
+                }
+            }
+
         }
 
-
-
-        antall--;
         endringer++;
         return p;
 
     }
 
-    private void fjernVerdi(Node p, Node q){
+    /*private void fjernVerdi(Node p, Node q){
 
         System.out.println(rot.verdi);
         if (p.venstre == null || p.høyre == null)  // Tilfelle 1) og 2)
@@ -227,10 +263,11 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         antall--;
 
-    }
+    }*/
 
     public int fjernAlle(T verdi)
     {
+        if(antall==0) return 0;
         if (verdi == null) return 0;  // treet har ingen nullverdier
 
         Node<T> p = rot, q = null;   // q skal være forelder til p
@@ -238,7 +275,6 @@ public class ObligSBinTre<T> implements Beholder<T>
         int antFjernet = 0;
 
         Stack<Node> fjernStakk = new Stack<>();
-        Stack<Node> forelderStakk = new Stack<>();
 
         while (p != null)            // leter etter verdi
         {
@@ -247,15 +283,14 @@ public class ObligSBinTre<T> implements Beholder<T>
             else if (cmp > 0) { q = p; p = p.høyre;}   // går til høyre
             else{
                 fjernStakk.push(p);//Legger til noder i stacken for å fjerne senere
-                forelderStakk.push(q);
-                q = p;
                 p = p.høyre;
             }
         }
         //Fjerner alle objekter med riktig verdi og starter i bunn
         while(!fjernStakk.isEmpty()){
-            fjernVerdi(fjernStakk.pop(),forelderStakk.pop());
+            fjernVerdi(fjernStakk.pop());
             antFjernet++;
+            antall--;
         }
         return antFjernet;
     }
