@@ -2,6 +2,7 @@ package no.oslomet.cs.algdat.Oblig3;
 
 ////////////////// ObligSBinTre /////////////////////////////////
 
+import javax.swing.plaf.TabbedPaneUI;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -18,12 +19,19 @@ public class ObligSBinTre<T> implements Beholder<T>
         tre.leggInn(7);
         tre.leggInn(91212);
         tre.leggInn(9);
+        tre.leggInn(100);
         tre.leggInn(9);
-        tre.leggInn(9);
-        tre.leggInn(9);
-        tre.nullstill();
+        tre.leggInn(12);
+        tre.leggInn(0);
+        tre.leggInn(20);
+        tre.leggInn(2);
+        tre.leggInn(1);
+        String [] grenerLOL = tre.grener();
+       System.out.println(grenerLOL[0]);
+        System.out.println(grenerLOL[1]);
+        //System.out.println(tre.grener().toString());
 
-        System.out.println(tre.omvendtString());
+        //System.out.println(tre.omvendtString());
     }
 
 
@@ -436,40 +444,42 @@ public class ObligSBinTre<T> implements Beholder<T>
         throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
-    private void antBladNoder(Node p,int cntBladNoder){
+    private int antBladNoder(Node p,int cntBladNoder){
 
         if(p==null){
-            return;
-        }if(p.venstre!=null){
-            antBladNoder(p.venstre,cntBladNoder);
+            return 0;
         }
-        if(p.høyre!=null) {
-            antBladNoder(p.høyre, cntBladNoder);
-        }
+        antBladNoder(p.venstre,cntBladNoder);
 
-        if(p.venstre==null && p.høyre==null){
-            cntBladNoder++;
-        }
+
+        antBladNoder(p.høyre, cntBladNoder);
+
+
+        if(p.venstre==null && p.høyre==null) cntBladNoder++;
+        return cntBladNoder;
     }
 
-    private void printGren(Node p,TabellListe grenVerdier,String[] gren,int ledigPlass){
+    private void printGren(Node p,TabellListe grenVerdier,TabellListe gren,int ledigPlass){
         if(p==null){
             return;
         }
         grenVerdier.leggInn(p.verdi);
         printGren(p.venstre,grenVerdier,gren,ledigPlass);
         if(p.venstre==null && p.høyre==null){
-            String ut = "";
-            for(int i = 0; i <= grenVerdier.antall();i++){
+            String ut = "[";
+            for(int i = 0; i <= grenVerdier.antall()-1;i++){
                 ut += grenVerdier.hent(i);
-
-
+                if(i!=grenVerdier.antall()-1){
+                    ut+=", ";
+                }
             }
-            gren[ledigPlass]=ut;
+            ut+="]";
+            gren.leggInn(ut);
 
-            grenVerdier.fjern(grenVerdier.antall()-1);
         }
         printGren(p.høyre,grenVerdier,gren,ledigPlass);
+
+        grenVerdier.fjern(grenVerdier.antall()-1);
 
         //grenVerdier.hent()
 
@@ -482,8 +492,9 @@ public class ObligSBinTre<T> implements Beholder<T>
     {
         int ledigPlass = 0;
         int antGrener = 0;
-        antBladNoder(rot,antGrener);
-        String[] grener = new String[antGrener];
+       // antBladNoder(rot,antGrener);
+        String[] grenerUt = new String[antall/2 +1];
+        TabellListe grener = new TabellListe();
         boolean run = true;
 
         TabellListe grenTabbel = new TabellListe();
@@ -492,8 +503,12 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         printGren(rot,grenTabbel,grener,ledigPlass);
 
+        for(int j = 0; j<=grener.antall()-1;j++){
+            grenerUt[j]=(String)grener.hent(j);
+        }
 
-        return grener;
+
+        return grenerUt;
     }
 
     private void bladnodeVerdierRekurson(Node<T> p, StringBuilder str){
