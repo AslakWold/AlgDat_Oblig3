@@ -276,7 +276,7 @@ public class ObligSBinTre<T> implements Beholder<T>
         System.out.println(nesteInorden(tre.rot.høyre.venstre.høyre));
     } */
     private static <T> Node<T> nesteInorden(Node<T> p)
-    {
+    {       //Må håndtere når man har flere høyre barn på rad...
         if(p.høyre != null) {
             while(p.venstre != null) {
                 p = p.venstre;
