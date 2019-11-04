@@ -231,6 +231,7 @@ public class Oblig3Test {
             System.out.println("Oppgave 5a: Feil i fjern(T)!");
         }
 
+
         int[] a = {6, 3, 9, 1, 5, 7, 10, 2, 4, 8, 11, 6, 8};
         for (int verdi : a) tre.leggInn(verdi);
 
@@ -241,6 +242,7 @@ public class Oblig3Test {
             antallFeil++;
             System.out.println("Oppgave 5b: Feil i fjern(T)! Tallet 12 er ikke i treet!");
         }
+
 
         if (fjernet == true) {
             antallFeil++;
@@ -253,6 +255,7 @@ public class Oblig3Test {
             System.out.println("Oppgave 5d: Feil i fjern(T)! Variabelen antall skal");
             System.out.println("ikke endres for en mislykket fjerning.");
         }
+
 
         fjernet = tre.fjern(2);
         s = tre.toString();
@@ -273,6 +276,7 @@ public class Oblig3Test {
             System.out.println("Oppgave 5g: Feil i fjern(T)! Variabelen antall skal");
             System.out.println("reduseres med 1 for en vellykket fjerning.");
         }
+
 
         tre.fjern(4);
         s = tre.toString();
@@ -308,6 +312,7 @@ public class Oblig3Test {
             antallFeil++;
             System.out.println("Oppgave 5k: Feil i fjern(T)!");
         }
+
 
         tre.fjern(1);
         tre.fjern(3);
@@ -390,7 +395,7 @@ public class Oblig3Test {
         long tid = System.currentTimeMillis();
         tre.nullstill();
         tid = System.currentTimeMillis() - tid;
-
+        System.out.println("KOM HIT");
         if (tid < 10) {
             antallFeil++;
             System.out.println("Oppgave 5v: Har du kodet nullstill() ved kun");

@@ -133,19 +133,81 @@ public class ObligSBinTre<T> implements Beholder<T>
         }
         if (p == null) return false;   // finner ikke verdi
 
-        fjernVerdi(p,q);
+        //fjernVerdi(p,q);
+
+        fjernVerdiTest(p);
+
 
             return true;
     }
 
+    public static Node finnMinste(Node p){
+        if(p.venstre==null){
+            return p;
+        }
+
+        return finnMinste(p.venstre);
+    }
+    private Node fjernVerdiTest(Node p){
+
+        //Noden som slettes har to barns
+        if(p.venstre!=null && p.høyre!=null){
+            Node minste = finnMinste(p.høyre);
+            if (p.verdi.equals(minste.verdi)) {
+                fjernVerdiTest(minste);
+            }else{
+            p.verdi = minste.verdi;
+            p.høyre = fjernVerdiTest(p.høyre);
+            }
+        }
+        //Noden som skal slettes har ingen barn
+        else if(p.høyre==null && p.venstre==null){
+            if(p.equals(rot)){
+                rot=null;
+                p.forelder=null;
+            }else if(p==p.forelder.venstre){
+                p.forelder.venstre=null;
+                p=null;
+            }else{
+                p.forelder.høyre=null;
+                p=null;
+            }
+        }
+        //Noden som skal slettes har et barn
+        else{
+          if(p.venstre!=null){
+              p.forelder.venstre=p.venstre;
+              p.venstre.forelder=p.forelder;
+          }
+          else{
+              p.forelder.høyre=p.høyre;
+              p.høyre.forelder=p.forelder;
+          }
+        }
+
+
+
+        antall--;
+        endringer++;
+        return p;
+
+    }
+
     private void fjernVerdi(Node p, Node q){
 
+        System.out.println(rot.verdi);
         if (p.venstre == null || p.høyre == null)  // Tilfelle 1) og 2)
         {
-            Node<T> b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
-            if (p == rot) rot = b;
-            else if (p == q.venstre){ q.venstre = b;}
-            else{ q.høyre = b;}
+            Node b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
+            if (p == rot){
+                rot = b;
+            }
+            else if (p == q.venstre){
+                q.venstre = b;
+            }
+            else if(p==q.høyre){
+                q.høyre = b;
+            }
         }
         else  // Tilfelle 3)
         {
@@ -159,7 +221,7 @@ public class ObligSBinTre<T> implements Beholder<T>
             p.verdi = r.verdi;   // kopierer verdien i r til p
 
 
-            if (s != p){ s.venstre = r.høyre; r.forelder=s;}  //setter nye foreldre
+            if (s != p){ s.venstre = r.høyre; r.forelder=s;}  //setter nye foreldre og oppdater pekerne
             else {s.høyre = r.høyre;r.forelder=s;}
         }
 
@@ -257,6 +319,7 @@ public class ObligSBinTre<T> implements Beholder<T>
             rot=null;
         }
         antall--;
+        endringer++;
     }
 
     @Override
@@ -533,6 +596,16 @@ public class ObligSBinTre<T> implements Beholder<T>
         @Override
         public void remove()
         {
+            if(iteratorendringer != endringer){
+                throw new ConcurrentModificationException("Iterasjonsendringer er ikke det samme som nodens endringer");
+            }else if(!removeOK){
+                throw new IllegalStateException("Fjern ikke OK");
+            }
+            removeOK=false;
+
+
+
+
             throw new UnsupportedOperationException("Ikke kodet ennå!");
         }
 
