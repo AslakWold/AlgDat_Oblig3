@@ -21,7 +21,7 @@ public class ObligSBinTre<T> implements Beholder<T>
         tre.leggInn(9);
         tre.leggInn(9);
         tre.leggInn(9);
-        tre.fjernAlle(9);
+        tre.nullstill();
 
         System.out.println(tre.omvendtString());
     }
@@ -199,8 +199,6 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     private void fjernVerdi(Node p, Node q){
 
-
-
         if (p.venstre == null || p.høyre == null)  // Tilfelle 1) og 2)
         {
             Node<T> b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
@@ -343,7 +341,10 @@ public class ObligSBinTre<T> implements Beholder<T>
         p.forelder=null;
         p.venstre=null;
         p.høyre=null;
-        p.verdi=null;
+        if(p==rot){
+            rot=null;
+        }
+        antall--;
     }
 
     @Override
@@ -454,7 +455,7 @@ public class ObligSBinTre<T> implements Beholder<T>
     private void printGren(Node p,TabellListe grenVerdier,String[] gren,int ledigPlass){
         if(p==null){
             return;
-        }System.out.println("KUl");
+        }
         grenVerdier.leggInn(p.verdi);
         printGren(p.venstre,grenVerdier,gren,ledigPlass);
         if(p.venstre==null && p.høyre==null){
