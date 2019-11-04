@@ -2,10 +2,37 @@ package no.oslomet.cs.algdat.Oblig3;
 
 ////////////////// ObligSBinTre /////////////////////////////////
 
+import javax.swing.plaf.TabbedPaneUI;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class ObligSBinTre<T> implements Beholder<T>
 {
+
+    public static void main(String [] args){
+        no.oslomet.cs.algdat.Oblig3.ObligSBinTre<Integer> tre =
+                new ObligSBinTre<>(Comparator.naturalOrder());
+
+        String s;
+
+        tre.leggInn(6);
+        tre.leggInn(7);
+        tre.leggInn(91212);
+        tre.leggInn(9);
+        tre.leggInn(100);
+        tre.leggInn(9);
+        tre.leggInn(12);
+        tre.leggInn(0);
+        tre.leggInn(20);
+        tre.leggInn(2);
+        tre.leggInn(1);
+        String [] grenerLOL = tre.grener();
+       System.out.println(grenerLOL[0]);
+        System.out.println(grenerLOL[1]);
+        //System.out.println(tre.grener().toString());
+
+        //System.out.println(tre.omvendtString());
+    }
 
 
     private static final class Node<T>   // en indre nodeklasse
@@ -93,123 +120,86 @@ public class ObligSBinTre<T> implements Beholder<T>
     @Override
     public boolean fjern(T verdi)
     {
-            if (verdi == null) return false;  // treet har ingen nullverdier
-
-            Node<T> p = rot, q = null;   // q skal være forelder til p
-
-            int wichChild = 0;
-
-
-            while (p != null)            // leter etter verdi
-            {
-                int cmp = comp.compare(verdi,p.verdi);      // sammenligner
-                if (cmp < 0) { q = p; p = p.venstre; wichChild = -1; }      // går til venstre
-                else if (cmp > 0) { q = p; p = p.høyre; wichChild = 1; }   // går til høyre
-                else break;    // den søkte verdien ligger i p
-            }
-            if (p == null) return false;   // finner ikke verdi
-            if(antall==1){
-                rot=null;
-            }
-
-            fjernVerdi(p,q,wichChild);
-
-
-               // p.verdi = r.verdi;   // kopierer verdien i r til p
-
-
-
-                /*if(s!=p){
-                    s.venstre=r.høyre;
-                }else{
-                    s.høyre=r.høyre;
-                }/*
-
-            }
-
-            /*Node<T> pParent = p.forelder;
-
-            if (p.venstre == null || p.høyre == null)  // Tilfelle 1) og 2)
-            {
-                Node<T> b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
-                if (p == rot) rot = b;
-                else if (p == q.venstre) q.venstre = b;
-                else q.høyre = b;
-            }
-            else  // Tilfelle 3)
-            {
-                Node<T> s = p, r = p.høyre;   // finner neste i inorden
-                while (r.venstre != null)
-                {
-                    s = r;    // s er forelder til r
-                    r = r.venstre;
-                }
-
-                p.verdi = r.verdi;   // kopierer verdien i r til p
-
-                if (s != p) s.venstre = r.høyre;
-                else s.høyre = r.høyre;
-            }*/
-
-            antall--;   // det er nå én node mindre i treet
-            return true;
-    }
-
-    private void fjernVerdi(Node p, Node q, int wichCild){
-        if(p.venstre==null && p.høyre==null){
-            if(wichCild==-1){
-                q.venstre=null;
-            }else{
-                q.høyre=null;
-            }
-        }
-        else if(p.venstre==null){
-            p.høyre.forelder=q;
-            q.høyre=p.høyre.forelder;
-        }
-        else if(p.høyre==null){
-            p.venstre.forelder=q;
-            q.venstre=p.venstre.forelder;
-
-        }else {
-            Node<T> s = p, r = p.høyre;   // finner neste i inorden
-            while (r.venstre != null) {
-                s = r;// s er forelder til r
-                r = r.venstre;
-                p.verdi = s.verdi;
-                p.venstre.verdi = r.verdi;
-
-            }
-            s.forelder.venstre=null;
-            s.forelder=null;
-        }
-    }
-
-    public int fjernAlle(T verdi)
-    {
-        TabellStakk<T> fjernTall = new TabellStakk<>();
-        if (verdi == null) return 0;  // treet har ingen nullverdier
+        if (verdi == null) return false;  // treet har ingen nullverdier
 
         Node<T> p = rot, q = null;   // q skal være forelder til p
-
-        int whichCild = 0;
-
-        int antFjernet = 0;
-
 
         while (p != null)            // leter etter verdi
         {
             int cmp = comp.compare(verdi,p.verdi);      // sammenligner
-            if (cmp < 0) { q = p; p = p.venstre;whichCild=-1;}      // går til venstre
-            else if (cmp > 0) { q = p; p = p.høyre;whichCild=1;}   // går til høyre
-            else {
-                fjernVerdi(p,q,whichCild);
-                antFjernet++;
+            if (cmp < 0) { q = p; p = p.venstre; }      // går til venstre
+            else if (cmp > 0) { q = p; p = p.høyre; }   // går til høyre
+            else break;    // den søkte verdien ligger i p
+        }
+        if (p == null) return false;   // finner ikke verdi
+
+        fjernVerdi(p,q);
+
+            return true;
+    }
+
+    private void fjernVerdi(Node p, Node q){
+
+        if (p.venstre == null || p.høyre == null)  // Tilfelle 1) og 2)
+        {
+            Node<T> b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
+            if (p == rot) rot = b;
+            else if (p == q.venstre){ q.venstre = b;}
+            else{ q.høyre = b;}
+        }
+        else  // Tilfelle 3)
+        {
+            Node<T> s = p, r = p.høyre;   // finner neste i inorden
+            while (r.venstre != null)
+            {
+                s = r;    // s er forelder til r
+                r = r.venstre;
             }
 
+            p.verdi = r.verdi;   // kopierer verdien i r til p
+
+
+            if (s != p){ s.venstre = r.høyre; r.forelder=s;}  //setter nye foreldre
+            else {s.høyre = r.høyre;r.forelder=s;}
+        }
+
+        antall--;
+
+    }
+
+    public int fjernAlle(T verdi)
+    {
+        if (verdi == null) return 0;  // treet har ingen nullverdier
+
+        Node<T> p = rot, q = null;   // q skal være forelder til p
+
+        int antFjernet = 0;
+
+        Stack<Node> fjernStakk = new Stack<>();
+        Stack<Node> forelderStakk = new Stack<>();
+
+        while (p != null)            // leter etter verdi
+        {
+            int cmp = comp.compare(verdi,p.verdi);      // sammenligner
+            if (cmp < 0) { q = p; p = p.venstre;}      // går til venstre
+            else if (cmp > 0) { q = p; p = p.høyre;}   // går til høyre
+            else{
+                fjernStakk.push(p);//Legger til noder i stacken for å fjerne senere
+                forelderStakk.push(q);
+                q = p;
+                p = p.høyre;
+            }
+        }
+        //Fjerner alle objekter med riktig verdi og starter i bunn
+        while(!fjernStakk.isEmpty()){
+            fjernVerdi(fjernStakk.pop(),forelderStakk.pop());
+            antFjernet++;
         }
         return antFjernet;
     }
+
+
+
 
     @Override
     public int antall()
@@ -254,24 +244,26 @@ public class ObligSBinTre<T> implements Beholder<T>
         if(p==null){
             return;
         }
+        //Løper gjennom hele treet rekursivt
         fjernTre(p.venstre);
         fjernTre(p.høyre);
 
+        //Setter alle verdier til null
         p.forelder=null;
         p.venstre=null;
         p.høyre=null;
+        //Nullstiller siste node til slutt
+        if(p==rot){
+            rot=null;
+        }
+        antall--;
     }
 
     @Override
     public void nullstill()
     {
-        Node<T> p = rot;
-        Node<T> q = null;
-
-
-        /*while(rot!=null){
-
-        }*/
+        //Bruker hjelpemetode for å nullstille ved hjelp av rekusojn.
+        fjernTre(rot);
     }
 
     /*
@@ -325,6 +317,7 @@ public class ObligSBinTre<T> implements Beholder<T>
     public String omvendtString()
     {
 
+        //if(rot==null) return "[]";
         if(tom()) return "[]";
 
         StringBuilder utString = new StringBuilder("[");
@@ -383,19 +376,140 @@ public class ObligSBinTre<T> implements Beholder<T>
         throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
+
+    //Hjelpe metode som sansynligvis fjernes før innlevering
+    private int antBladNoder(Node p,int cntBladNoder){
+
+        if(p==null){
+            return 0;
+        }
+        antBladNoder(p.venstre,cntBladNoder);
+
+
+        antBladNoder(p.høyre, cntBladNoder);
+
+
+        if(p.venstre==null && p.høyre==null) cntBladNoder++;
+        return cntBladNoder;
+    }
+
+    private void printGren(Node p,TabellListe grenVerdier,TabellListe gren){
+        if(p==null){
+            return;
+        }
+        //Legger inn verdi
+        grenVerdier.leggInn(p.verdi);
+        printGren(p.venstre,grenVerdier,gren);
+        //Sjekker om det er en bladnode
+        if(p.venstre==null && p.høyre==null){
+            String ut = "[";
+            for(int i = 0; i <= grenVerdier.antall()-1;i++){
+                ut += grenVerdier.hent(i);
+                if(i!=grenVerdier.antall()-1){
+                    ut+=", ";
+                }
+            }
+            ut+="]";
+
+            //Legger grenen inn i egen tabellListe
+            gren.leggInn(ut);
+
+        }
+        printGren(p.høyre,grenVerdier,gren);
+        //Fjerner siste objekt for å finne ny gren.
+        grenVerdier.fjern(grenVerdier.antall()-1);
+
+
+    }
+
+
+
     public String[] grener()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        //Lager utArray og hjelpetabeller
+        String[] grenerUt = new String[antall/2 +1];
+        TabellListe grener = new TabellListe();
+        TabellListe grenTabbel = new TabellListe();
+
+
+        //Kjører hjelpemetode for å kunne bruke rekusjon.
+        printGren(rot,grenTabbel,grener);
+
+        //Legger inn grenene i utArray fra Tabeller som var med i rekusjon.
+        for(int i = 0; i<=grener.antall()-1;i++){
+            grenerUt[i]=(String)grener.hent(i);
+        }
+
+
+        return grenerUt;
+    }
+
+    private void bladnodeVerdierRekurson(Node<T> p, StringBuilder str){
+        if(p == null) return;
+
+        bladnodeVerdierRekurson(p.venstre, str);
+        if(p.venstre == null && p.høyre == null){
+            str.append(p.verdi + ", ");
+        }
+        bladnodeVerdierRekurson(p.høyre, str);
     }
 
     public String bladnodeverdier()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(tom()) return "[]";
+
+        StringBuilder utString = new StringBuilder("[");
+        Node<T> p = rot;
+
+        bladnodeVerdierRekurson(p, utString);
+        //Formaterer strengen
+        utString.delete(utString.length()-2, utString.length());
+        utString.append("]");
+
+        return utString.toString();
     }
 
     public String postString()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(tom()) return "[]";
+
+        //Bruker her to stacks, der den ene holder på verdiene til
+        //treet i motsatt postorden, deretter legges dette riktig
+        //igjen i motsatt rekkefølge inn i den andre stacken,
+
+        StringBuilder str = new StringBuilder("[");
+        Stack<Node<T>> stack_one = new Stack<>();
+        Stack<Node<T>> stack_two = new Stack<>();
+        Node<T> p = rot;
+
+        stack_one.push(p);
+        while(!stack_one.isEmpty()){
+            //Pop fra stack_one og push til stack_two
+            Node<T> temp = stack_one.pop();
+            stack_two.push(temp);
+
+            //Push venstre og høyre barn til
+            //tempnoden til stakk 1
+            if(temp.venstre != null){
+                stack_one.push(temp.venstre);
+            }
+            if(temp.høyre != null){
+                stack_one.push(temp.høyre);
+            }
+        }
+
+        while(!stack_two.isEmpty()){
+            Node<T> temp = stack_two.pop();
+            str.append(temp.verdi + ", ");
+        }
+
+
+        //Formater str
+        str.delete(str.length()-2, str.length());
+        str.append("]");
+        return str.toString();
+
     }
 
     @Override
