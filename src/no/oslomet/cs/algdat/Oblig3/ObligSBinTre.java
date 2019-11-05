@@ -156,7 +156,7 @@ public class ObligSBinTre<T> implements Beholder<T>
         if(p.venstre!=null && p.høyre!=null){
             Node minste = finnMinste(p.høyre);
             p.verdi = minste.verdi;
-            fjernVerdi(minste);
+            fjernVerdi(minste); //Kjører metoden en gang til for minste.
 
         }
         //Noden som skal slettes har ingen barn
@@ -184,88 +184,22 @@ public class ObligSBinTre<T> implements Beholder<T>
         }
         //Noden som skal slettes har kun ett barn
         else{
-            if(p.forelder.høyre!=null){
-                if(p.forelder.høyre.equals(p)){
-                    if(p.venstre!=null){
-                        if(p.equals(rot)){
-                            rot = p.venstre;
-                        }else{
-                            p.forelder.høyre = p.venstre;
-                        }
-                        p.venstre.forelder = p.forelder;
-                    }
-                    else{
-                        if(p.equals(rot)){
-                            rot = p.høyre;
-                        }else{
-                            p.forelder.høyre = p.høyre;
-                        }
-                        p.høyre.forelder = p.forelder;
-                    }
-            }
-            }if(p.forelder.venstre!=null){
-                if(p.forelder.venstre.equals(p)){
-                    if(p.venstre!=null){
-                        if(p.equals(rot)){
-                            rot = p.venstre;
-                        }else{
-                            p.forelder.venstre = p.venstre;
-                        }
-                        p.venstre.forelder = p.forelder;
-                    }
-                    else{
-                        if(p.equals(rot)){
-                            rot = p.høyre;
-                        }else{
-                            p.forelder.venstre = p.høyre;
-                        }
-                        p.høyre.forelder = p.forelder;
-                    }
-                }
-            }
+            if(p.høyre!=null){
 
+                Node pMin = finnMinste(p.høyre); //Finner minste i høyre tre.
+                p.verdi=pMin.verdi; //Setter ny verdi for p
+                fjernVerdi(pMin); //Fjerner gamle pMin siden verdien nå ligger i p
+            }else{
+
+                Node fjern = p.venstre; //Setter fjernNode til venstre barn
+                p.verdi=fjern.verdi; //Finner ny verdi for p.
+                fjernVerdi(fjern); //Kjører metoden på nytt og fjerner fjern Noden.
+            }
         }
-
         endringer++;
         return p;
 
     }
-
-    /*private void fjernVerdi(Node p, Node q){
-
-        System.out.println(rot.verdi);
-        if (p.venstre == null || p.høyre == null)  // Tilfelle 1) og 2)
-        {
-            Node b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
-            if (p == rot){
-                rot = b;
-            }
-            else if (p == q.venstre){
-                q.venstre = b;
-            }
-            else if(p==q.høyre){
-                q.høyre = b;
-            }
-        }
-        else  // Tilfelle 3)
-        {
-            Node<T> s = p, r = p.høyre;   // finner neste i inorden
-            while (r.venstre != null)
-            {
-                s = r;    // s er forelder til r
-                r = r.venstre;
-            }
-
-            p.verdi = r.verdi;   // kopierer verdien i r til p
-
-
-            if (s != p){ s.venstre = r.høyre; r.forelder=s;}  //setter nye foreldre og oppdater pekerne
-            else {s.høyre = r.høyre;r.forelder=s;}
-        }
-
-        antall--;
-
-    }*/
 
     public int fjernAlle(T verdi)
     {
@@ -288,7 +222,7 @@ public class ObligSBinTre<T> implements Beholder<T>
                 p = p.høyre;
             }
         }
-        //Fjerner alle objekter med riktig verdi og starter i bunn
+        //Fjerner alle objekter med riktig verdi og starter i bunnen av treet ved hjelp av stacken.
         while(!fjernStakk.isEmpty()){
             fjernVerdi(fjernStakk.pop());
             antFjernet++;
@@ -351,10 +285,11 @@ public class ObligSBinTre<T> implements Beholder<T>
         p.forelder=null;
         p.venstre=null;
         p.høyre=null;
-        //Nullstiller siste node til slutt
+        //Nullstiller rotnoden til slutt
         if(p==rot){
             rot=null;
         }
+
         antall--;
         endringer++;
     }
@@ -523,25 +458,17 @@ public class ObligSBinTre<T> implements Beholder<T>
         printGren(p.venstre,grenVerdier,gren);
         //Sjekker om det er en bladnode
         if(p.venstre==null && p.høyre==null){
-            String stringUt = "[";
-            for(int i = 0; i <= grenVerdier.antall()-1;i++){
-                stringUt += grenVerdier.hent(i);
-                if(i!=grenVerdier.antall()-1){
-                    stringUt+=", ";
+
+            StringBuilder stringUt = new StringBuilder("[");
+            //Legger inn
+            for(int i = 0; i <= grenVerdier.antall()-1;i++) {
+                stringUt.append(grenVerdier.hent(i));
+                if (i == grenVerdier.antall() - 1) {
+                    stringUt.append("]");
+                } else {
+                    stringUt.append(", ");
                 }
             }
-            stringUt+="]";
-            /*StringBuilder stringUt = new StringBuilder("[");
-            for(int i = 0; i <= grenVerdier.antall()-1;i++){
-                stringUt.append(grenVerdier.hent(i));
-                if(i==grenVerdier.antall()-1){
-                    stringUt.append("]");
-                }else{
-                    stringUt.append(", ");
-                }*/
-
-
-
             //Legger grenen inn i egen tabellListe
             gren.leggInn(stringUt);
 
@@ -574,7 +501,7 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         //Legger inn grenene i utArray fra Tabeller som var med i rekusjon.
         for(int i = 0; i<=grener.antall()-1;i++){
-            grenerUt[i]=(String)grener.hent(i);
+            grenerUt[i]=grener.hent(i).toString();
         }
 
         return grenerUt;

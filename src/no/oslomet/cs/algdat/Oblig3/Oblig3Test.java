@@ -395,7 +395,7 @@ public class Oblig3Test {
         long tid = System.currentTimeMillis();
         tre.nullstill();
         tid = System.currentTimeMillis() - tid;
-        System.out.println("KOM HIT");
+
         if (tid < 10) {
             antallFeil++;
             System.out.println("Oppgave 5v: Har du kodet nullstill() ved kun");
