@@ -456,12 +456,39 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public String høyreGren()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(rot == null){
+            return "[]";
+        }
+        Node thisNode = rot;
+        StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
+        stringJoiner.add(thisNode.verdi.toString());
+        while(thisNode.høyre != null || thisNode.venstre != null){
+            if(thisNode.høyre != null){
+                thisNode = thisNode.høyre;
+                stringJoiner.add(thisNode.verdi.toString());
+            }
+            else{
+                thisNode = thisNode.venstre;
+                stringJoiner.add(thisNode.verdi.toString());
+            }
+        }
+        return stringJoiner.toString();
     }
 
     public String lengstGren()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(rot == null){
+            return "[]";
+        }
+        Node thisNode = rot;
+        StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
+        stringJoiner.add(thisNode.verdi.toString());
+        String lengstGren = "";
+
+        while(stringJoiner.toString() != høyreGren()){
+            while(stringJoiner.toString() != lengstGren)
+        }
+
     }
 
 
