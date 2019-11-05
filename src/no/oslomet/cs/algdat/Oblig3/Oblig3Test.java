@@ -911,6 +911,7 @@ public class Oblig3Test {
 
             if (!tre.toString().equals("[1, 3, 5, 7, 8, 9, 10, 11]")) {
                 antallFeil++;
+                System.out.println(tre.toString());
                 System.out.println("Oppgave 10h: Feil i metoden remove()!");
             }
 

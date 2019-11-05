@@ -623,11 +623,12 @@ public class ObligSBinTre<T> implements Beholder<T>
                 throw new ConcurrentModificationException("Endringer stemmer ikke med iteratorendringer");
             }
 
-            removeOK = true;
-            T temp = p.verdi;
 
+            removeOK = true;
+            T temp = p.verdi; //Holder på verdien til p
+            q = p;
             while(hasNext()){
-                p = nesteInorden(p);
+                p = nesteInorden(p); // Bruker nesteInorden
 
                 if(p == null){
                     return temp;
@@ -653,11 +654,19 @@ public class ObligSBinTre<T> implements Beholder<T>
                 throw new IllegalStateException("Fjern ikke OK");
             }
             removeOK=false;
+            if(q == rot){
+                rot = null;
+            }
+            else if(q.forelder.venstre == q){
+                q.forelder.venstre = null;
+            } else if(q.forelder.høyre == q){
+                q.forelder.høyre = null;
+            }
+            iteratorendringer++;
+            endringer++;
+            antall--;
 
 
-
-
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
         }
 
     } // BladnodeIterator
