@@ -1,6 +1,7 @@
 package no.oslomet.cs.algdat.Oblig3;
 
 import java.util.Comparator;
+import java.util.Iterator;
 
 import static java.util.Comparator.naturalOrder;
 
@@ -52,5 +53,18 @@ public class Testing {
         }
 
         */
+
+        //Tester oppg 9
+
+        {
+            String[] strenger = {"H", "Q", "B", "F", "C", "P", "U"};
+            ObligSBinTre<String> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+            for (String verdi: strenger) {
+                tre.leggInn(verdi);
+            }
+
+            Iterator<String> it = tre.iterator();
+
+        }
     }
 }

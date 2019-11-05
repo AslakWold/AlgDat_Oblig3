@@ -2,8 +2,6 @@ package no.oslomet.cs.algdat.Oblig3;
 
 ////////////////// ObligSBinTre /////////////////////////////////
 
-import javax.swing.plaf.TabbedPaneUI;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class ObligSBinTre<T> implements Beholder<T>
@@ -655,7 +653,24 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         private BladnodeIterator()  // konstruktør
         {
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
+            if(tom()) return;
+
+            p = finnFørsteBladnode(p);
+            System.out.println(p);
+
+        }
+
+        private Node<T> finnFørsteBladnode(Node<T> p){
+            if(p.venstre == null && p.høyre == null){
+                return p;
+            }
+            else if(p.venstre != null){
+                return finnFørsteBladnode(p.venstre);
+            }else {
+                return finnFørsteBladnode(p.høyre);
+            }
+
+
         }
 
         @Override
@@ -667,7 +682,35 @@ public class ObligSBinTre<T> implements Beholder<T>
         @Override
         public T next()
         {
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
+            if(tom()) throw new NoSuchElementException("Treet er tomt");
+            if(p == rot){
+                return p.verdi;
+            }
+            if(p.forelder != null){
+                if(p == p.forelder.høyre){ //Hvis p er høyrebarn
+                    while(p != p.forelder.venstre){ //p er ikke venstrebarn
+                        p = p.forelder;
+                    }
+                    p = p.forelder;
+                    while(p.høyre == null){
+
+                        p = p.forelder;
+                    }
+                    p = finnFørsteBladnode(p.høyre);
+                }
+                else if(p == p.forelder.venstre){ //p er venstrebarn
+                    while(p.høyre == null){
+                        p = p.forelder;
+                    }
+                    p = finnFørsteBladnode(p.høyre);
+                }
+            }
+
+            if(p == rot){
+                throw new NoSuchElementException("Finnes ingen flere bladnoder");
+            }
+            removeOK = true;
+            return p.verdi;
         }
 
         @Override
