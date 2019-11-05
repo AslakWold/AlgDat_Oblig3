@@ -480,15 +480,20 @@ public class ObligSBinTre<T> implements Beholder<T>
         if(rot == null){
             return "[]";
         }
-        Node thisNode = rot;
-        StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
-        stringJoiner.add(thisNode.verdi.toString());
-        String lengstGren = "";
-
-        while(stringJoiner.toString() != høyreGren()){
-            while(stringJoiner.toString() != lengstGren)
+        String[] grener = grener();
+        int max = 0;
+        int antall = 0;
+        String størsteGren = "";
+        for(int i = 0; i < grener.length; i++){
+            String enkeltGren = grener[i];
+            String[] antallElementer = enkeltGren.split(",");
+            antall = antallElementer.length;
+            if(antall > max){
+               størsteGren = enkeltGren;
+               max = antall;
+            }
         }
-
+        return størsteGren;
     }
 
 
