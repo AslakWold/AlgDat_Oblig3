@@ -57,13 +57,27 @@ public class Testing {
         //Tester oppg 9
 
         {
-            String[] strenger = {"H", "Q", "B", "F", "C", "P", "U"};
-            ObligSBinTre<String> tre = new ObligSBinTre<>(Comparator.naturalOrder());
-            for (String verdi: strenger) {
+            String[] strenger = {"I","A","T","B","H","J","C","R","S","O","F","E","L","K","G","D","M","P","Q","N"};
+            int[] a = {5, 2, 8, 1, 4, 6, 9, 3, 7};
+            ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+            ObligSBinTre<String> tre2 = new ObligSBinTre<>(Comparator.naturalOrder());
+            for (int verdi: a) {
                 tre.leggInn(verdi);
             }
+            for (String verdi: strenger) {
+                tre2.leggInn(verdi);
+            }
 
-            Iterator<String> it = tre.iterator();
+
+            Iterator<Integer> it = tre.iterator();
+            Iterator<String> it2 = tre2.iterator();
+
+            for(String s : tre2) System.out.print(s + " ");
+
+            for (Integer i : tre) System.out.print(i + " ");
+
+
+
 
         }
     }
