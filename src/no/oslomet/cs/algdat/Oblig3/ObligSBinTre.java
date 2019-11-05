@@ -484,9 +484,11 @@ public class ObligSBinTre<T> implements Beholder<T>
         String lengstGren = "";
 
         while(stringJoiner.toString() != høyreGren()){
-            while(stringJoiner.toString() != lengstGren)
-        }
+            while(stringJoiner.toString() != lengstGren){
 
+            }
+        }
+        return "kuk";
     }
 
 
