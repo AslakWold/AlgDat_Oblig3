@@ -9,32 +9,6 @@ import java.util.*;
 public class ObligSBinTre<T> implements Beholder<T>
 {
 
-    public static void main(String [] args){
-        no.oslomet.cs.algdat.Oblig3.ObligSBinTre<Integer> tre =
-                new ObligSBinTre<>(Comparator.naturalOrder());
-
-        String s;
-
-        tre.leggInn(6);
-        tre.leggInn(7);
-        tre.leggInn(91212);
-        tre.leggInn(9);
-        tre.leggInn(100);
-        tre.leggInn(9);
-        tre.leggInn(12);
-        tre.leggInn(0);
-        tre.leggInn(20);
-        tre.leggInn(2);
-        tre.leggInn(1);
-        String [] grenerLOL = tre.grener();
-       System.out.println(grenerLOL[0]);
-        System.out.println(grenerLOL[1]);
-        //System.out.println(tre.grener().toString());
-
-        //System.out.println(tre.omvendtString());
-    }
-
-
     private static final class Node<T>   // en indre nodeklasse
     {
         private T verdi;                   // nodens verdi
@@ -392,18 +366,19 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public String høyreGren()
     {
+        // Dersom treet er tomt
         if(rot == null){
             return "[]";
         }
         Node thisNode = rot;
         StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
-        stringJoiner.add(thisNode.verdi.toString());
-        while(thisNode.høyre != null || thisNode.venstre != null){
-            if(thisNode.høyre != null){
+        stringJoiner.add(thisNode.verdi.toString()); // Stringjoiner for å få alle nodeverdiene til string
+        while(thisNode.høyre != null || thisNode.venstre != null){ //Kjøres så lenge noden ikke er bladnode
+            if(thisNode.høyre != null){ //Prøver først å legge til høyrebarn
                 thisNode = thisNode.høyre;
                 stringJoiner.add(thisNode.verdi.toString());
             }
-            else{
+            else{ //hvis ikke høyrebarn finnes, legges venstrebarn til stringjoiner
                 thisNode = thisNode.venstre;
                 stringJoiner.add(thisNode.verdi.toString());
             }
@@ -413,18 +388,18 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public String lengstGren()
     {
-        if(rot == null){
+        if(rot == null){ //Dersom treet er tomt
             return "[]";
         }
-        String[] grener = grener();
+        String[] grener = grener(); // Hjelpemetode for å få ut alle grenene
         int max = 0;
         int antall = 0;
         String størsteGren = "";
-        for(int i = 0; i < grener.length; i++){
+        for(int i = 0; i < grener.length; i++){ //For-løkke som looper gjennom alle grenene
             String enkeltGren = grener[i];
-            String[] antallElementer = enkeltGren.split(",");
+            String[] antallElementer = enkeltGren.split(",");//Splitter for å få lengden til én enkeltgren
             antall = antallElementer.length;
-            if(antall > max){
+            if(antall > max){ //Sjekker hvilken som er lengst
                størsteGren = enkeltGren;
                max = antall;
             }
@@ -648,20 +623,25 @@ public class ObligSBinTre<T> implements Beholder<T>
         @Override
         public void remove()
         {
+            //Sjekker at iteratorendringer samsvarer med antall endringer
+            // og at next()-metoden har blitt kjørt
             if(iteratorendringer != endringer){
                 throw new ConcurrentModificationException("Iterasjonsendringer er ikke det samme som nodens endringer");
             }else if(!removeOK){
                 throw new IllegalStateException("Fjern ikke OK");
             }
             removeOK=false;
+            //Hvis next() er rot, fjern rot
             if(q == rot){
                 rot = null;
-            }
+            } //Sjekker om q er høyre- eller venstrebarn
+              // og nuller ut pekeren til forelderen
             else if(q.forelder.venstre == q){
                 q.forelder.venstre = null;
             } else if(q.forelder.høyre == q){
                 q.forelder.høyre = null;
             }
+            //Oppdaterer endringer og antall
             iteratorendringer++;
             endringer++;
             antall--;
