@@ -566,7 +566,7 @@ public class ObligSBinTre<T> implements Beholder<T>
             if(tom()) return;
 
             p = finnFørsteBladnode(p);
-            System.out.println(p);
+
 
         }
 
