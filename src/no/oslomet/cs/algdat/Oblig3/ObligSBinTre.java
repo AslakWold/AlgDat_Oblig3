@@ -302,19 +302,19 @@ public class ObligSBinTre<T> implements Beholder<T>
     }
 
 
-    private static <T> Node<T> førsteInorden(Node<T> p) {
-        while(p.venstre != null) {
+    private static <T> Node<T> førsteInorden(Node<T> p) {   //går ned i venstre subtre fra noden
+        while(p.venstre != null) {        //denne metoden kalles først får å finne første inorden i treet (Fra rot)
             p = p.venstre;
         }
         return p;
     }
 
-    private static <T> Node<T> nesteInorden(Node<T> p) {
-        if (p.høyre != null) {
+    private static <T> Node<T> nesteInorden(Node<T> p) {    //traverserer treet inorden og
+        if (p.høyre != null) {                              //returnerer etterfølgeren i inorden
             return førsteInorden(p.høyre);
         }
         else {
-            while (p.forelder != null && p.forelder.høyre == p) {
+            while (p.forelder != null && p.forelder.høyre == p) {   //det er her vi finner neste oppover i treet
                 p = p.forelder;
             }
             return p.forelder;
@@ -325,14 +325,14 @@ public class ObligSBinTre<T> implements Beholder<T>
     public String toString()
     {
         if(tom()) {
-            return "[]";
+            return "[]";    //tomt tre
         }
         StringJoiner sj = new StringJoiner(", ","[", "]");
-        Node<T> p = førsteInorden(rot);
+        Node<T> p = førsteInorden(rot);     //finner første verdi i treet i inorden
 
         while(p != null) {
-            sj.add(String.valueOf(p.verdi));
-            p = nesteInorden(p);
+            sj.add(String.valueOf(p.verdi)); //legger til
+            p = nesteInorden(p);             //finner neste verdi i treet i inorden
         }
 
         return sj.toString();
